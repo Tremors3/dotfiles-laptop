@@ -290,20 +290,29 @@ setopt PROMPT_SUBST
 # }
 
 
-# Git prompt
+# ------------------------------------------------------------
+# Prompt - Git
+# ------------------------------------------------------------
+
 #GIT_PROMPT_LOCATION="$HOME/.local/bin/git-prompt.sh"
 
 # Download git-prompt.sh if needed
 # curl -o "$GIT_PROMPT_LOCATION" \
 #     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 
-#if [[ -f "$GIT_PROMPT_LOCATION" ]]; then
+# if [[ -f "$GIT_PROMPT_LOCATION" ]]; then
 #    source "$GIT_PROMPT_LOCATION"
-#fi
+# fi
 
 # if (( ${+functions[__git_ps1]} )); then
 #     PROMPT+="${NEWLINE}├─>$(__git_ps1 ' (%s)')"
 # fi
+
+#GIT_PS1_SHOWDIRTYSTATE=1
+#GIT_PS1_SHOWSTASHSTATE=1
+#GIT_PS1_SHOWUNTRACKEDFILES=1
+#GIT_PS1_SHOWUPSTREAM="verbose git"
+#echo "$(__git_ps1 '(%s)')"
 
 
 precmd() {
@@ -311,15 +320,25 @@ precmd() {
 
     if git rev-parse --is-inside-work-tree &>/dev/null; then
         local branch
+        local diff_with_origin
         branch=$(git branch --show-current)
 
         [[ -z "$branch" ]] &&
             branch="HEAD:$(git rev-parse --short HEAD)"
 
-        git_prompt_info="${branch}"
+        diff_with_origin=($(git rev-list --left-right --count "origin/${branch}...${branch}"))
+        
+        behind=""
+        ahead=""
+
+        [[ $diff_with_origin[1] != "0" ]] && behind=" $diff_with_origin[1]🡓"
+        [[ $diff_with_origin[2] != "0" ]] && ahead=" $diff_with_origin[2]🡑"
+
+        # Construct git prompt
+        git_prompt_info=" ${branch}${behind}${ahead}"
 
         if [[ -n "$(git status --porcelain)" ]]; then
-            git_prompt_info+=" ●"
+            git_prompt_info+=" •" # ●◉
         fi
     fi
 }
@@ -344,10 +363,15 @@ END_COLOR='%f'
 NEWLINE=$'\n'
 
 # Prompt
-PROMPT="${NEWLINE}"
-PROMPT+="╭─${BEGIN_ORANGE}[%m]${END_COLOR}"
-PROMPT+="─${BEGIN_COOLBLUE}[%n]${END_COLOR}"
-PROMPT+='${git_prompt_info:+─(${git_prompt_info})}'
-PROMPT+=" %d"
-PROMPT+="${NEWLINE}"
-PROMPT+="╰─> "
+print_pre_prompt() {
+    PROMPT="${NEWLINE}"
+    PROMPT+="╭─${BEGIN_ORANGE}[%m]${END_COLOR}"
+    PROMPT+="─${BEGIN_COOLBLUE}[%n]${END_COLOR}"
+    PROMPT+=" %d"
+    PROMPT+="${NEWLINE}"
+    PROMPT+="╰─> "
+
+    RPROMPT='${git_prompt_info:+ ${git_prompt_info}}'
+}
+
+precmd_functions+=(print_pre_prompt)
