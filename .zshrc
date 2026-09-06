@@ -143,6 +143,8 @@ alias fsauto='echo "level auto" | sudo tee /proc/acpi/ibm/fan'  # set fan speed 
 
 # Home's dotfiles alias
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config-hide-untracked='config config --local status.showUntrackedFiles no'
+alias config-update='config add -u && echo "\e[1;32mAll tracked files have been added.\e[0m" && config status'
 
 # Find and sort mirrors based on rate
 alias refmirror='reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist'
