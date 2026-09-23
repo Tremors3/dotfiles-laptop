@@ -1,0 +1,6 @@
+# Excluding .env files
+*.env
+
+# Excluding files containing .<tag>.
+*.tmp.*
+*.sec.*

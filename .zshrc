@@ -91,10 +91,10 @@ alias ....='cd ../../..'
 
 # Listing
 alias c='clear'  # clear terminal
-alias l='eza -lh --icons=auto'  # long list
+alias l='eza -lhg --smart-group --icons=auto'  # long list
 alias ls='eza -1 --icons=auto'  # short list
-alias ll='eza -lha --icons=auto --sort=name --group-directories-first'  # long list all
-alias ld='eza -lhD --icons=auto'  # long list dirs
+alias ll='eza -lhga --smart-group --icons=auto --sort=name --group-directories-first'  # long list all
+alias ld='eza -lhgD --icons=auto'  # long list dirs
 alias lt='eza --long --icons=auto --tree'  # list folder as tree
 alias lt2='eza --long --icons=auto --tree --level 2'  # list folder as tree to level 2
 alias lt3='eza --long --icons=auto --tree --level 3'  # list folder as tree to level 3
