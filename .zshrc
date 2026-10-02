@@ -141,10 +141,13 @@ alias clear-trash='find ~/Trash -mindepth 1 -delete'  # clear the trash
 alias fsfs='echo "level full-speed" | sudo tee /proc/acpi/ibm/fan'  # set fan speed to max
 alias fsauto='echo "level auto" | sudo tee /proc/acpi/ibm/fan'  # set fan speed to auto
 
-# Home's dotfiles alias
+# Home's dotfiles
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias config-hide-untracked='config config --local status.showUntrackedFiles no'
 alias config-update='config add -u && echo "\e[1;32mAll tracked files have been added.\e[0m" && config status'
+
+# DMS alias
+alias config-dms-backup='dms backup create --output $HOME/.backup/dms/"dms-backup-<timestamp>.tar.gz"'  # Backup DMS config files into an archive
 
 # Find and sort mirrors based on rate
 alias refmirror='reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist'
